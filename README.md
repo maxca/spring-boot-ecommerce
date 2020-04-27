@@ -11,7 +11,7 @@
 ``mvn spring-boot:run``
 ## run with debug
 ``mvn spring-boot:run -x``
-## run with clea && debug
+## run with clean && debug
 ``mvn clean spring-boot:run -x``
 
 
