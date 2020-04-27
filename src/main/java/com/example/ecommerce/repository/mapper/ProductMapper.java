@@ -1,14 +1,14 @@
 package com.example.ecommerce.repository.mapper;
 
-import com.example.ecommerce.model.User;
+import com.example.ecommerce.model.Product;
 import org.springframework.jdbc.core.RowMapper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserLoginMapper implements RowMapper<User> {
-
+public class ProductMapper  implements RowMapper<Product> {
     @Override
-    public User mapRow(ResultSet resultSet, int i) throws SQLException {
+    public Product mapRow(ResultSet resultSet, int i) throws SQLException {
         return null;
     }
 }

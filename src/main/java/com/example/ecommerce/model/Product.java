@@ -5,5 +5,9 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class User {
+public class Product {
+
+    private String name;
+    private String price;
+    private String stock;
 }
