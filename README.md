@@ -1,3 +1,11 @@
+## step 1 create database with command 
+goto shell command and use type command bellow
+---
+`` psql --> enter`` <br>
+`` create database ecommerce; --> enter``<br>
+`` exit; --> enter``
+
+
 ## pack file
 ``mvn package``
 
