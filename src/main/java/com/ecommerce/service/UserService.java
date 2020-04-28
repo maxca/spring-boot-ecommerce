@@ -3,6 +3,7 @@ package com.ecommerce.service;
 import com.ecommerce.exception.BusinessException;
 import com.ecommerce.exception.UnauthorizedException;
 import com.ecommerce.model.User;
+import com.ecommerce.model.response.UserEditProfile;
 import com.ecommerce.model.UserSession;
 import com.ecommerce.model.request.UserLoginRequest;
 import com.ecommerce.model.response.UserRegister;
@@ -31,6 +32,13 @@ public class UserService {
                     .setPhone(user.getPhone());
         }
         throw new BusinessException(500, "can't create user");
+    }
+
+    public UserEditProfile editProfile(User user) {
+        return new UserEditProfile()
+                .setEmail(user.getEmail())
+                .setName(user.getName())
+                .setPhone(user.getPhone());
     }
 
     public UserSession login(UserLoginRequest request) {
