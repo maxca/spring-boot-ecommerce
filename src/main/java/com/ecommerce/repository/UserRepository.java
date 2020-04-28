@@ -32,4 +32,16 @@ public class UserRepository {
         params.put("phone", user.getPhone());
         return namedParameterJdbcTemplate.update(sql.toString(), params);
     }
+
+    public int editProfile(User user) throws NoSuchAlgorithmException {
+        StringJoiner sql = new StringJoiner(" ");
+        sql.add("UPDATE users ")
+                .add("SET name = :name, phone = :phone, updated_datetime = now() ")
+                .add("WHERE id LIKE :id;");
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", user.getId());
+        params.put("name", user.getName());
+        params.put("phone", user.getPhone());
+        return namedParameterJdbcTemplate.update(sql.toString(), params);
+    }
 }
