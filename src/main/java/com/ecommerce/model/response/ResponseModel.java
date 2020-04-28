@@ -27,6 +27,10 @@ public class ResponseModel<T> implements Serializable {
         this.statusHeader = statusHeader;
     }
 
-
+    public ResponseModel(String statusCode, String statusHeader, T dataObj) {
+        this.statusCode = statusCode;
+        this.statusHeader = statusHeader;
+        this.dataObj = dataObj;
+    }
 }
 
