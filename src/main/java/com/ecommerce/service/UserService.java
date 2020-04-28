@@ -34,11 +34,11 @@ public class UserService {
         throw new BusinessException(500, "can't create user");
     }
 
-    public UserEditProfile editProfile(User user) {
-        return new UserEditProfile()
-                .setEmail(user.getEmail())
-                .setName(user.getName())
-                .setPhone(user.getPhone());
+    public User editProfile(User user) throws BusinessException{
+        if (null != userRepository.editProfile(user)) {
+            return userRepository.findUserById(user.getId());
+        }
+        throw new BusinessException(500, "can't edit user");
     }
 
     public UserSession login(UserLoginRequest request) {

@@ -36,7 +36,7 @@ public class UserRepository {
         return namedParameterJdbcTemplate.update(sql.toString(), params);
     }
 
-    public int editProfile(User user) throws NoSuchAlgorithmException {
+    public Object editProfile(User user) {
         StringJoiner sql = new StringJoiner(" ");
         sql.add("UPDATE users ")
                 .add("SET name = :name, phone = :phone, updated_datetime = now() ")
@@ -45,7 +45,11 @@ public class UserRepository {
         params.put("id", user.getId());
         params.put("name", user.getName());
         params.put("phone", user.getPhone());
-        return namedParameterJdbcTemplate.update(sql.toString(), params);
+        try {
+            return namedParameterJdbcTemplate.update(sql.toString(), params);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     public User login(UserLoginRequest request) {
@@ -75,6 +79,22 @@ public class UserRepository {
         try {
             return namedParameterJdbcTemplate.update(sql.toString(), params);
         } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    public User findUserById(String userId) {
+        StringJoiner sql = new StringJoiner(" ");
+        sql.add("select id ,email, phone ,name from users")
+                .add("where id =:userId");
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+
+        try {
+            return namedParameterJdbcTemplate.queryForObject(sql.toString(), params, new UserMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            log.error("not found user");
             return null;
         }
     }
