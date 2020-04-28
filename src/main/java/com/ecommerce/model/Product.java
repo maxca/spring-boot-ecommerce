@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Product {
     private String id;
+    private String userId;
     private String name;
     private Float price;
     private Integer stock;
