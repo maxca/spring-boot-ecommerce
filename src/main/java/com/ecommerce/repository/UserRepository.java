@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.StringJoiner;
 import java.util.UUID;
 
+import static com.ecommerce.helper.EncryptionHelper.md5;
+
 @Slf4j
 @Repository
 public class UserRepository {
@@ -30,9 +32,10 @@ public class UserRepository {
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", UUID.randomUUID());
         params.put("email", user.getEmail());
-        params.put("password", user.getPassword());
+        params.put("password", md5(user.getPassword()));
         params.put("name", user.getName());
         params.put("phone", user.getPhone());
+
         return namedParameterJdbcTemplate.update(sql.toString(), params);
     }
 
@@ -60,7 +63,7 @@ public class UserRepository {
         HashMap<String, Object> params = new HashMap<>();
 
         params.put("email", request.getEmail());
-        params.put("password", request.getPassword());
+        params.put("password", md5(request.getPassword()));
         try {
             return namedParameterJdbcTemplate.queryForObject(sql.toString(), params, new UserMapper());
         } catch (EmptyResultDataAccessException ex) {
