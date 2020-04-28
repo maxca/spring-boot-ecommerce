@@ -1,6 +1,7 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.model.Product;
+import com.ecommerce.model.response.ResponseModel;
 import com.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,10 +19,11 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping(path = "/{productId}")
-    public ResponseEntity<Product> findProductById(@PathVariable("productId") String productId) {
+    public ResponseEntity<?> findProductById(@PathVariable("productId") String productId) {
         Product product = productService.findProductById(productId);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(product);
+                .body(new ResponseModel(product));
     }
 }

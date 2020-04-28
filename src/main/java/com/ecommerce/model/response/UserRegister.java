@@ -1,24 +1,17 @@
-package com.ecommerce.model;
+package com.ecommerce.model.response;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Data
 @Accessors(chain = true)
-public class User {
-    private String id;
-    @NotNull
+public class UserRegister implements Serializable {
     private String email;
-    @NotNull
-    private String password;
     @NotNull
     private String phone;
     @NotNull
     private String name;
-
-    private String lastLogin;
-    private String createdDatetime;
-    private String updatedDatetime;
 }
