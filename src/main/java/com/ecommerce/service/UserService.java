@@ -1,18 +1,15 @@
 package com.ecommerce.service;
 
 import com.ecommerce.exception.BusinessException;
+import com.ecommerce.exception.RecordNotFoundException;
 import com.ecommerce.exception.UnauthorizedException;
 import com.ecommerce.model.User;
-import com.ecommerce.model.response.UserEditProfile;
 import com.ecommerce.model.UserSession;
 import com.ecommerce.model.request.UserLoginRequest;
-import com.ecommerce.model.response.UserRegister;
 import com.ecommerce.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.security.NoSuchAlgorithmException;
 
 @Service
 @Slf4j
@@ -24,17 +21,19 @@ public class UserService {
     @Autowired
     private UserSessionService userSessionService;
 
-    public UserRegister createUser(User user) throws NoSuchAlgorithmException, BusinessException {
-        if (userRepository.createUser(user) == 1) {
-            return new UserRegister()
-                    .setEmail(user.getEmail())
-                    .setName(user.getName())
-                    .setPhone(user.getPhone());
+    public User createUser(User user) throws BusinessException {
+        String userId = userRepository.createUser(user);
+        if (null == userId) {
+            throw new BusinessException(500, "can't create user");
         }
-        throw new BusinessException(500, "can't create user");
+        User profile = userRepository.findUserById(userId);
+        if (null == profile) {
+            throw new RecordNotFoundException(404, "not found user");
+        }
+        return profile;
     }
 
-    public User editProfile(User user) throws BusinessException{
+    public User editProfile(User user) throws BusinessException {
         if (null != userRepository.editProfile(user)) {
             return userRepository.findUserById(user.getId());
         }
