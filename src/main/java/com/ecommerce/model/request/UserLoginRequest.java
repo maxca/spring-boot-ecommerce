@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 @Data
 @Accessors(chain = true)
 public class UserLoginRequest {
-    @NotNull
+    @NotNull(message = "The email file is required")
     private String email;
-    @NotNull
+    @NotNull(message = "The password field is required")
     private String password;
 }
