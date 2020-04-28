@@ -1,16 +1,16 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.model.User;
+import com.ecommerce.model.UserSession;
+import com.ecommerce.model.request.UserLoginRequest;
 import com.ecommerce.model.response.ResponseModel;
+import com.ecommerce.model.response.UserEditProfile;
 import com.ecommerce.model.response.UserRegister;
 import com.ecommerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
@@ -22,12 +22,28 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseModel> register(@RequestBody @Valid User user) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> register(@RequestBody @Valid User user) throws NoSuchAlgorithmException {
         UserRegister userRegister = userService.createUser(user);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel(userRegister));
     }
 
+    @PutMapping("/edit-profile")
+    public ResponseEntity<ResponseModel> editProfile(@RequestBody @Valid User user) throws NoSuchAlgorithmException {
+        User userEditProfile = userService.editProfile(user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseModel(userEditProfile));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody @Valid UserLoginRequest user) {
+        UserSession userSession = userService.login(user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseModel(userSession));
+
+    }
 
 }
