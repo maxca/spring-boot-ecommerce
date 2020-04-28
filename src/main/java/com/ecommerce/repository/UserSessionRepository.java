@@ -22,7 +22,8 @@ public class UserSessionRepository {
         StringJoiner sql = new StringJoiner(" ");
         sql.add("select id, user_id, expired_datetime")
                 .add("from users_session")
-                .add("where id = :sessionId")
+                .add("where id = :sessionId and")
+                .add("expired_datetime > now()")
                 .add("limit 1;");
 
         HashMap<String, Object> params = new HashMap<>();

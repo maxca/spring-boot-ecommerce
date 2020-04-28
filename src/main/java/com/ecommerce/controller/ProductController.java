@@ -18,10 +18,9 @@ public class ProductController {
     @GetMapping(path = "/{productId}")
     public ResponseEntity<?> findProductById(
             @PathVariable("productId") String productId,
-            @RequestHeader("session_id") String sessionId
+            @RequestHeader("sessionId") String sessionId
     ) {
         Product product = productService.findProductById(sessionId, productId);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel(product));
