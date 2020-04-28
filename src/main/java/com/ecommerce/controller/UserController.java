@@ -1,6 +1,8 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.model.User;
+import com.ecommerce.model.UserSession;
+import com.ecommerce.model.request.UserLoginRequest;
 import com.ecommerce.model.response.ResponseModel;
 import com.ecommerce.model.response.UserRegister;
 import com.ecommerce.service.UserService;
@@ -22,12 +24,20 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseModel> register(@RequestBody @Valid User user) throws NoSuchAlgorithmException {
+    public ResponseEntity<?> register(@RequestBody @Valid User user) throws NoSuchAlgorithmException {
         UserRegister userRegister = userService.createUser(user);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel(userRegister));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody @Valid UserLoginRequest user) {
+        UserSession userSession = userService.login(user);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseModel(userSession));
+
+    }
 
 }

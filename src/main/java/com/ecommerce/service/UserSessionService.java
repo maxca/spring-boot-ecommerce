@@ -21,4 +21,12 @@ public class UserSessionService {
         }
         return session;
     }
+
+    public UserSession createUserSession(String userId) {
+        String sessionId = userSessionRepository.createUserSession(userId);
+        if (null == sessionId) {
+            throw new UnauthorizedException(404, "Unauthorized can't create session");
+        }
+        return this.validateSession(sessionId);
+    }
 }
