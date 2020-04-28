@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/v1/products")
 public class ProductController {
@@ -15,14 +17,23 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping(path = "/{productId}")
+    @GetMapping(path = "{productId}")
     public ResponseEntity<?> findProductById(
-            @PathVariable("productId") String productId,
-            @RequestHeader("sessionId") String sessionId
+            @PathVariable("productId") String productId
     ) {
-        Product product = productService.findProductById(sessionId, productId);
+        Product product = productService.findProductById(productId);
+        ResponseModel<Product> data = new ResponseModel<>(product);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseModel(product));
+                .body(data);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllProduct() {
+        List<Product> products = productService.getAllProduct();
+        ResponseModel<List<Product>> data = new ResponseModel<>(products);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(data);
     }
 }
