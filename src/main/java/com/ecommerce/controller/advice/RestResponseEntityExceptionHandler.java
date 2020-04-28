@@ -1,6 +1,7 @@
 package com.ecommerce.controller.advice;
 
 import com.ecommerce.exception.BusinessException;
+import com.ecommerce.exception.RecordNotFoundException;
 import com.ecommerce.exception.UnauthorizedException;
 import com.ecommerce.model.response.ResponseModel;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel("401", ex.getMessage()));
+    }
+
+    @ExceptionHandler(RecordNotFoundException.class)
+    protected ResponseEntity<Object> handelRecordNotFoundException(RecordNotFoundException ex, WebRequest request) {
+        log.error(ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseModel("404", ex.getMessage()));
     }
 
     @ExceptionHandler(BusinessException.class)
