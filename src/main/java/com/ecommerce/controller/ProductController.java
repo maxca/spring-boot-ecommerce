@@ -6,8 +6,10 @@ import com.ecommerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -16,6 +18,17 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @PostMapping
+    public ResponseEntity<?> createProduct(
+            @RequestHeader("sessionId") String sessionId,
+            @Valid @NonNull @RequestBody Product newProduct) {
+        Product product = productService.createProduct(sessionId, newProduct);
+        ResponseModel<Product> data = new ResponseModel<>(product);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(data);
+    }
 
     @GetMapping(path = "{productId}")
     public ResponseEntity<?> findProductById(
