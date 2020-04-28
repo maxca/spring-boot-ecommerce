@@ -40,7 +40,7 @@ public class UserRepository {
         StringJoiner sql = new StringJoiner(" ");
         sql.add("UPDATE users ")
                 .add("SET name = :name, phone = :phone, updated_datetime = now() ")
-                .add("WHERE id LIKE :id;");
+                .add("WHERE id = :id;");
         HashMap<String, Object> params = new HashMap<>();
         params.put("id", user.getId());
         params.put("name", user.getName());

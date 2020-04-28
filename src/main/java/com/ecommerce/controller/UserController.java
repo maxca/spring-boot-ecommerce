@@ -29,7 +29,7 @@ public class UserController {
                 .body(new ResponseModel(userRegister));
     }
 
-    @PutMapping("/editprofile")
+    @PutMapping("/edit-profile")
     public ResponseEntity<ResponseModel> editprofile(@RequestBody @Valid User user) throws NoSuchAlgorithmException {
         UserEditProfile userEditProfile = userService.editProfile(user);
         return ResponseEntity

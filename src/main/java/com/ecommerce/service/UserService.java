@@ -34,14 +34,11 @@ public class UserService {
         throw new BusinessException(500, "can't create user");
     }
 
-    public UserEditProfile editProfile(User user) throws NoSuchAlgorithmException, BusinessException {
-        if (userRepository.editProfile(user) == 1) {
-            return new UserEditProfile()
-                    .setEmail(user.getEmail())
-                    .setName(user.getName())
-                    .setPhone(user.getPhone());
-        }
-        throw new BusinessException(500, "can't edit user");
+    public UserEditProfile editProfile(User user) {
+        return new UserEditProfile()
+                .setEmail(user.getEmail())
+                .setName(user.getName())
+                .setPhone(user.getPhone());
     }
 
     public UserSession login(UserLoginRequest request) {
