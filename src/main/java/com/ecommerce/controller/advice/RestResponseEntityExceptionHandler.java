@@ -1,6 +1,8 @@
 package com.ecommerce.controller.advice;
 
-import org.springframework.http.HttpHeaders;
+import com.ecommerce.exception.BusinessException;
+import com.ecommerce.model.response.ResponseModel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,15 +12,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 
 @ControllerAdvice
+@Slf4j
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(value = {BusinessException.class})
+    protected ResponseEntity<Object> handelBusinessException(RuntimeException ex, WebRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseModel("401", ex.getMessage()));
+    }
 
-    @ExceptionHandler(value
-            = {IllegalArgumentException.class, IllegalStateException.class})
-    protected ResponseEntity<Object> handleConflict(
-            RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "This should be application specific";
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.CONFLICT, request);
+    @ExceptionHandler(value = {Exception.class})
+    protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseModel("500", ex.getMessage()));
     }
 }
 

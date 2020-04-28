@@ -20,6 +20,8 @@ public class ProductController {
     @GetMapping(path = "/{productId}")
     public ResponseEntity<Product> findProductById(@PathVariable("productId") String productId) {
         Product product = productService.findProductById(productId);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(product);
     }
 }
