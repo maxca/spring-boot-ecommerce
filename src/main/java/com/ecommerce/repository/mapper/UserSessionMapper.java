@@ -12,7 +12,7 @@ public class UserSessionMapper implements RowMapper<UserSession> {
         UserSession session = new UserSession();
         session.setId(resultSet.getString("id"));
         session.setUserId(resultSet.getString("user_id"));
-        session.setExpiredDateTime(resultSet.getString("expired_datetime"));
+        session.setExpiredDatetime(resultSet.getString("expired_datetime"));
         return session;
     }
 }
