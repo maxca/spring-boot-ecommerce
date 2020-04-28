@@ -1,6 +1,7 @@
 package com.ecommerce.controller.advice;
 
 import com.ecommerce.exception.BusinessException;
+import com.ecommerce.exception.UnauthorizedException;
 import com.ecommerce.model.response.ResponseModel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,22 +15,28 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 @Slf4j
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = {BusinessException.class})
-    protected ResponseEntity<Object> handelBusinessException(RuntimeException ex, WebRequest request) {
+    @ExceptionHandler(UnauthorizedException.class)
+    protected ResponseEntity<Object> handleConflict(UnauthorizedException ex, WebRequest request) {
         log.error(ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel("401", ex.getMessage()));
     }
 
-    @ExceptionHandler(value = {Exception.class})
+    @ExceptionHandler(BusinessException.class)
+    protected ResponseEntity<Object> handelBusinessException(RuntimeException ex, WebRequest request) {
+        log.error(ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseModel("422", ex.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         log.error(ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel("500", ex.getMessage()));
     }
-
-
 }
 

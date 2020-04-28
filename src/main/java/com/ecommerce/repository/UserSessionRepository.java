@@ -20,9 +20,9 @@ public class UserSessionRepository {
 
     public UserSession findUserSessionBySessionId(String sessionId) {
         StringJoiner sql = new StringJoiner(" ");
-        sql.add("select id, user_id, session_id")
+        sql.add("select id, user_id, expired_datetime")
                 .add("from users_session")
-                .add("where session_id = :sessionId")
+                .add("where id = :sessionId")
                 .add("limit 1;");
 
         HashMap<String, Object> params = new HashMap<>();
@@ -30,6 +30,7 @@ public class UserSessionRepository {
         try {
             return namedParameterJdbcTemplate.queryForObject(sql.toString(), params, new UserSessionMapper());
         } catch (EmptyResultDataAccessException ex) {
+            log.error("select user session query :", sql.toString());
             return null;
         }
 

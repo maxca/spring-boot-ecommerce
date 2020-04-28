@@ -10,5 +10,5 @@ public class UserSession {
     private String id;
     private String userId;
     @DateTimeFormat
-    private String expiredTime;
+        private String expiredTime;
 }

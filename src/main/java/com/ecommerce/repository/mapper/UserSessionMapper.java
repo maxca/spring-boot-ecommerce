@@ -9,10 +9,10 @@ import java.sql.SQLException;
 public class UserSessionMapper implements RowMapper<UserSession> {
     @Override
     public UserSession mapRow(ResultSet resultSet, int i) throws SQLException {
-        UserSession userSession = new UserSession();
-        userSession.setId(resultSet.getString("id"));
-        userSession.setUserId(resultSet.getString("user_id"));
-        userSession.setExpiredTime(resultSet.getString("user_id"));
-        return userSession;
+        UserSession session = new UserSession();
+        session.setId(resultSet.getString("id"));
+        session.setUserId(resultSet.getString("user_id"));
+        session.setExpiredTime(resultSet.getString("expired_time"));
+        return session;
     }
 }

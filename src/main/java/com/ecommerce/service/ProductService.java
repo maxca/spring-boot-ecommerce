@@ -12,7 +12,12 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Product findProductById(String productId) throws BusinessException {
+    @Autowired
+    private UserSessionService userSessionService;
+
+    public Product findProductById(String sessionId, String productId) throws BusinessException {
+        // validate session first
+        userSessionService.validateSession(sessionId);
         Product product = productRepository.findProductById(productId);
         if (null == product) {
             throw new BusinessException(404, "Not found product");
