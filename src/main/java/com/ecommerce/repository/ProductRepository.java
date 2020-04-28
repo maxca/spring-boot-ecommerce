@@ -21,7 +21,9 @@ public class ProductRepository {
 
     public Product findProductById(String productId) {
         StringJoiner sql = new StringJoiner(" ");
-        sql.add("select * from product where product_id = :productId;");
+        sql.add("SELECT " + getProductAllFields());
+        sql.add("FROM products");
+        sql.add("WHERE id = :productId");
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("productId", productId);
@@ -35,7 +37,8 @@ public class ProductRepository {
 
     public List<Product> getAllProduct() {
         StringJoiner sql = new StringJoiner(" ");
-        sql.add("select * from product;");
+        sql.add("SELECT " + getProductAllFields());
+        sql.add("FROM products");
 
         try {
             return namedParameterJdbcTemplate.query(sql.toString(), new ProductMapper());
@@ -47,7 +50,7 @@ public class ProductRepository {
 
     public int updateProduct(Product product) {
         StringJoiner sql = new StringJoiner(" ");
-        sql.add("update product set")
+        sql.add("UPDATE products SET")
                 .add("name = :name")
                 .add("price = :price")
                 .add("stock = :stock");
@@ -56,5 +59,15 @@ public class ProductRepository {
         params.put("price", product.getPrice());
         params.put("stock", product.getStock());
         return namedParameterJdbcTemplate.update(sql.toString(), params);
+    }
+
+    private String getProductAllFields() {
+        return new StringJoiner(",")
+                .add("id")
+                .add("user_id")
+                .add("name")
+                .add("price")
+                .add("stock")
+                .toString();
     }
 }
