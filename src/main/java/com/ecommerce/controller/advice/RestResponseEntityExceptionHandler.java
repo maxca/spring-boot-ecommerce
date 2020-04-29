@@ -54,9 +54,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 .status(HttpStatus.OK)
                 .body(new ResponseModel("500", ex.getMessage()));
     }
+
     @ExceptionHandler(MissingRequestHeaderException.class)
     protected ResponseEntity<Object> handleMissingRequestHeader(MissingRequestHeaderException ex, WebRequest request) {
-        log.error("message");
         log.error(ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.OK)
