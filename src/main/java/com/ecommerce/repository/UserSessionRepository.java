@@ -1,6 +1,7 @@
 package com.ecommerce.repository;
 
 import com.ecommerce.model.UserSession;
+import com.ecommerce.repository.mapper.UserMapper;
 import com.ecommerce.repository.mapper.UserSessionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,21 @@ public class UserSessionRepository {
         String sessionId = UUID.randomUUID().toString();
         params.put("sessionId", sessionId);
         params.put("userId", userId);
+        try {
+            namedParameterJdbcTemplate.update(sql.toString(), params);
+            return sessionId;
+        } catch (QueryCreationException ex) {
+            log.error("query error", ex.getMessage());
+            return null;
+        }
+    }
+
+    public String deleteUserSession(String sessionId) {
+        StringJoiner sql = new StringJoiner(" ");
+        sql.add("DELETE FROM users_session ")
+                .add("where id = :sessionId");
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("sessionId", sessionId);
         try {
             namedParameterJdbcTemplate.update(sql.toString(), params);
             return sessionId;
