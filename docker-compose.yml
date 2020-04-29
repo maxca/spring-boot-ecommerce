@@ -24,8 +24,8 @@ services:
       - "8080"
     command: mvn clean spring-boot:run
     depends_on:
-      - postgres
-  postgres:
+      - db
+  db:
     image: postgres
     ports:
       - "5432:5432"
