@@ -59,11 +59,9 @@ public class UserService {
 
     public Object logout(String request) throws BusinessException {
         String profile = userSessionService.deleteUserSession(request);
-        HashMap<String, Object> data = new HashMap<>();
-        data.put("sessionId", profile);
         if (null == profile) {
             throw new UnauthorizedException(401, "Unauthorized service");
         }
-        return data;
+        return null;
     }
 }
