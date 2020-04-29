@@ -1,6 +1,7 @@
 package com.ecommerce.service;
 
 import com.ecommerce.exception.BusinessException;
+import com.ecommerce.exception.RecordNotFoundException;
 import com.ecommerce.exception.UnauthorizedException;
 import com.ecommerce.model.User;
 import com.ecommerce.model.UserSession;
@@ -32,7 +33,11 @@ public class UserSessionService {
         return this.validateSession(sessionId);
     }
 
-    public String deleteUserSession(String sessionIdUser){
+    public String deleteUserSession(String sessionIdUser) throws RecordNotFoundException {
+        UserSession checkSession = userSessionRepository.findUserSessionBySessionId(sessionIdUser);
+        if (null == checkSession) {
+            throw new RecordNotFoundException(404, "SessionID Not Found");
+        }
         String sessionId = userSessionRepository.deleteUserSession(sessionIdUser);
         if (null != sessionId) {
             return sessionIdUser;
