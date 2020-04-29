@@ -48,8 +48,8 @@ public class UserController {
                 .body(new ResponseModel(userSession));
     }
 
-    @DeleteMapping("/logout/{id}")
-    public ResponseEntity<?> logout(@PathVariable("id") String sessionId) {
+    @DeleteMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("sessionId") String sessionId) {
         Object userSession = userService.logout(sessionId);
         return ResponseEntity
                 .status(HttpStatus.OK)
