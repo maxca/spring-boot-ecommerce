@@ -4,8 +4,6 @@ import com.ecommerce.model.User;
 import com.ecommerce.model.UserSession;
 import com.ecommerce.model.request.UserLoginRequest;
 import com.ecommerce.model.response.ResponseModel;
-import com.ecommerce.model.response.UserEditProfile;
-import com.ecommerce.model.response.UserRegister;
 import com.ecommerce.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +25,10 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid User user) throws NoSuchAlgorithmException {
-        UserRegister userRegister = userService.createUser(user);
+        User profile = userService.createUser(user);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new ResponseModel(userRegister));
+                .body(new ResponseModel(profile));
     }
 
     @PutMapping("/edit-profile")
@@ -48,7 +46,14 @@ public class UserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel(userSession));
+    }
 
+    @DeleteMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("sessionId") String sessionId) {
+        Object userSession = userService.logout(sessionId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseModel(userSession));
     }
 
 }
