@@ -21,6 +21,10 @@ public class SaleOrderService {
     private SaleOrderRepository saleOrderRepository;
 
     public Object checkout(SaleOrder saleOrder) {
+        System.out.println(saleOrder.getUserId());
+        if (null == saleOrder.getUserId()) {
+            throw new RecordNotFoundException(404, "User Not found");
+        }
         ShoppingCart shoppingCart = shoppingCartRepository.getShoppingCart(saleOrder.getUserId());
         if (null == shoppingCart) {
             throw new RecordNotFoundException(404, "User Not found");
