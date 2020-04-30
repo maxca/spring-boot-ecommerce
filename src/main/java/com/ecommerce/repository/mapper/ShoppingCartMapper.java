@@ -14,6 +14,7 @@ public class ShoppingCartMapper implements RowMapper<ShoppingCart> {
         cart.setUserId(resultSet.getString("user_id"));
         cart.setTotalPrice(resultSet.getFloat("total_price"));
         cart.setUpdatedDatetime(resultSet.getString("updated_datetime"));
+        cart.setCreatedDatetime(resultSet.getString("created_datetime"));
         return cart;
     }
 
