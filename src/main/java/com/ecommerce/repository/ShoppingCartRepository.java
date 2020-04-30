@@ -1,6 +1,7 @@
 package com.ecommerce.repository;
 
 import com.ecommerce.model.CartItem;
+import com.ecommerce.model.Product;
 import com.ecommerce.model.ShoppingCart;
 import com.ecommerce.repository.mapper.CartItemMapper;
 import com.ecommerce.repository.mapper.ShoppingCartMapper;
@@ -23,16 +24,24 @@ public class ShoppingCartRepository {
         ShoppingCart cart = getShoppingCart(userId);
         CartItem cartItem = getCartItem(cart.getId(), item.getProductId());
         Map<String, Object> params = new HashMap<>();
-        params.put("id", (cartItem != null) ? cartItem.getId() : UUID.randomUUID().toString());
         params.put("cart_id", cart.getId());
         params.put("product_id", item.getProductId());
-        params.put("quantity", item.getQuantity());
         params.put("price", item.getPrice());
 
         StringJoiner sql = new StringJoiner(" ");
-        sql.add("INSERT INTO cart_item(")
-            .add("id, cart_id, product_id, quantity, price)")
-            .add("VALUES (:id, :cart_id, :product_id, :quantity, :price);");
+        if (cartItem == null) {
+            params.put("id", UUID.randomUUID().toString());
+            params.put("quantity", item.getQuantity());
+            sql.add("INSERT INTO cart_item(")
+                    .add("id, cart_id, product_id, quantity, price)")
+                    .add("VALUES (:id, :cart_id, :product_id, :quantity, :price);");
+        } else {
+            params.put("id", cartItem.getId());
+            params.put("quantity", cartItem.getQuantity() + item.getQuantity());
+            sql.add("UPDATE cart_item")
+                    .add("SET quantity = :quantity, price = :price")
+                    .add("WHERE id = :id");
+        }
         try {
             namedParameterJdbcTemplate.update(sql.toString(), params);
             return getShoppingCart(userId);
@@ -44,7 +53,7 @@ public class ShoppingCartRepository {
 
     public ShoppingCart getShoppingCart(String userId) {
         StringJoiner sql = new StringJoiner(" ");
-        sql.add("SELECT id, user_id, total_price, updated_datetime");
+        sql.add("SELECT id, user_id, total_price, total_qty, created_datetime, updated_datetime");
         sql.add("FROM shopping_cart");
         sql.add("WHERE user_id = :user_id");
         Map<String, Object> params = new HashMap<>();
@@ -73,12 +82,12 @@ public class ShoppingCartRepository {
 
         StringJoiner sql = new StringJoiner(" ");
         sql.add("INSERT INTO shopping_cart(")
-            .add("id, user_id, updated_datetime)")
-            .add("VALUES (:id, :user_id, now());");
+            .add("id, user_id, created_datetime, updated_datetime)")
+            .add("VALUES (:id, :user_id, now(), now());");
 
         try {
             int res = namedParameterJdbcTemplate.update(sql.toString(), params);
-            return (res == 1) ? cart : null;
+            return (res == 1) ? getShoppingCart(userId) : null;
         } catch (QueryCreationException ex) {
             log.error("insert error", ex.getMessage());
             return null;

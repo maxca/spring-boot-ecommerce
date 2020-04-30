@@ -11,6 +11,8 @@ public class ShoppingCart {
     private String id;
     private String userId;
     private Float totalPrice;
+    private int totalQty;
     private String updatedDatetime;
+    private String createdDatetime;
     private List<CartItem> items;
 }
