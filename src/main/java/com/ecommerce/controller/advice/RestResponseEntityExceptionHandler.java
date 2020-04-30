@@ -27,7 +27,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleConflict(UnauthorizedException ex, WebRequest request) {
         log.error(ex.getMessage());
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(new ResponseModel("401", ex.getMessage()));
     }
 
@@ -35,7 +35,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handelRecordNotFoundException(RecordNotFoundException ex, WebRequest request) {
         log.error(ex.getMessage());
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.NOT_FOUND)
                 .body(new ResponseModel("404", ex.getMessage()));
     }
 
@@ -43,7 +43,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handelBusinessException(RuntimeException ex, WebRequest request) {
         log.error(ex.getMessage());
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(new ResponseModel("422", ex.getMessage()));
     }
 
@@ -51,7 +51,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleConflict(Exception ex, WebRequest request) {
         log.error(ex.getMessage());
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ResponseModel("500", ex.getMessage()));
     }
 
@@ -59,7 +59,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     protected ResponseEntity<Object> handleMissingRequestHeader(MissingRequestHeaderException ex, WebRequest request) {
         log.error(ex.getMessage());
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseModel("400", ex.getMessage()));
     }
     
@@ -70,8 +70,8 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             errorMessages.add(error.getDefaultMessage());
         }
         return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResponseModel("400", "Validation Fail", errorMessages));
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(new ResponseModel("422", "Validation Fail", errorMessages));
     }
 
 }
