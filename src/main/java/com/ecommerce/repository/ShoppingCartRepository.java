@@ -53,7 +53,7 @@ public class ShoppingCartRepository {
 
     public ShoppingCart getShoppingCart(String userId) {
         StringJoiner sql = new StringJoiner(" ");
-        sql.add("SELECT id, user_id, total_price, created_datetime, updated_datetime");
+        sql.add("SELECT id, user_id, total_price, total_qty, created_datetime, updated_datetime");
         sql.add("FROM shopping_cart");
         sql.add("WHERE user_id = :user_id");
         Map<String, Object> params = new HashMap<>();
