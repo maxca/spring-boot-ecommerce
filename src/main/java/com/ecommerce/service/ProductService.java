@@ -41,4 +41,18 @@ public class ProductService {
     public List<Product> getAllProduct() throws BusinessException {
         return productRepository.getAllProduct();
     }
+
+    public void updateProduct(String userId, Product product) {
+        boolean isOwner = validateProductOwner(userId, product.getId());
+        if (isOwner) {
+            product.setUserId(userId);
+            productRepository.updateProduct(product);
+        } else {
+            throw new BusinessException(400, "It is not your product");
+        }
+    }
+
+    private boolean validateProductOwner(String userId, String productId) {
+        return productRepository.validateProductOwner(userId, productId);
+    }
 }

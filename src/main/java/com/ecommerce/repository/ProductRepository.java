@@ -8,7 +8,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 @Slf4j
 @Repository
@@ -72,17 +75,40 @@ public class ProductRepository {
         }
     }
 
-    public int updateProduct(Product product) {
+    public void updateProduct(Product product) {
         StringJoiner sql = new StringJoiner(" ");
         sql.add("UPDATE products SET")
-                .add("name = :name")
-                .add("price = :price")
-                .add("stock = :stock");
+                .add("name = :name, price = :price, stock = :stock")
+                .add("WHERE id = :id");
         HashMap<String, Object> params = new HashMap<>();
+        params.put("id", product.getId());
         params.put("name", product.getName());
         params.put("price", product.getPrice());
         params.put("stock", product.getStock());
-        return namedParameterJdbcTemplate.update(sql.toString(), params);
+        try {
+            namedParameterJdbcTemplate.update(sql.toString(), params);
+        } catch (EmptyResultDataAccessException exception) {
+            log.info("can't update products", sql.toString());
+        }
+    }
+
+    public boolean validateProductOwner(String userId, String productId) {
+        StringJoiner sql = new StringJoiner(" ");
+        sql.add("SELECT COUNT(*)");
+        sql.add("FROM products");
+        sql.add("WHERE id = :id AND user_id = :user_id");
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", productId);
+        params.put("user_id", userId);
+        try {
+            int res = namedParameterJdbcTemplate.queryForObject(sql.toString(), params, Integer.class);
+            log.info("find product res", res);
+            return (res > 0);
+        } catch (EmptyResultDataAccessException exception) {
+            log.info("product not found", sql.toString());
+            return false;
+        }
     }
 
     private String getProductAllFields() {
