@@ -37,11 +37,11 @@ public class ShoppingCartService {
         return shoppingCartRepository.addToCart(session.getUserId(), item);
     }
 
-    public ShoppingCart getShoppingCart(String sessionId) {
-        UserSession session = userSessionService.validateSession(sessionId);
-        if (null == session) {
-            throw new BusinessException(404, "User Not found");
-        }
-        return shoppingCartRepository.getShoppingCart(session.getUserId());
+    public ShoppingCart getShoppingCart(String userId) {
+        return shoppingCartRepository.getShoppingCart(userId);
+    }
+
+    public void deleteProductInCart(String itemId) {
+        shoppingCartRepository.deleteProductInCart(itemId);
     }
 }

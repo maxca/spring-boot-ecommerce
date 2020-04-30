@@ -71,6 +71,17 @@ public class ShoppingCartRepository {
         }
     }
 
+    public void deleteProductInCart(String itemId) {
+        String sql = "DELETE FROM cart_item WHERE id = :id";
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", itemId);
+        try {
+            namedParameterJdbcTemplate.update(sql.toString(), params);
+        } catch (QueryCreationException ex) {
+            log.error("delete error", ex.getMessage());
+        }
+    }
+
     private ShoppingCart createShippingCart(String userId) {
         ShoppingCart cart = new ShoppingCart();
         cart.setId(UUID.randomUUID().toString());
