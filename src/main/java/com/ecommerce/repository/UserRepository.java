@@ -63,7 +63,7 @@ public class UserRepository {
 
     public User login(UserLoginRequest request) {
         StringJoiner sql = new StringJoiner(" ");
-        sql.add("select id ,email, phone ,name from users")
+        sql.add("select id ,email, phone ,name ,created_datetime, updated_datetime from users")
                 .add("where users.email =:email")
                 .add("and users.password =:password;");
         HashMap<String, Object> params = new HashMap<>();
