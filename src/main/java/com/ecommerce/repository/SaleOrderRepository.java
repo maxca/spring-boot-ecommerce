@@ -20,18 +20,18 @@ public class SaleOrderRepository {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public Object createSaleOrder(ShoppingCart shoppingCart, SaleOrder saleOrder) {
+    public Object createSaleOrder(ShoppingCart shoppingCart) {
         StringJoiner sql = new StringJoiner(" ");
         sql.add("INSERT INTO sales_order(")
                 .add("id, user_id, status, order_no, total_price, created_datetime)")
-                .add("VALUES (:id, :userId, :status, :order_no, :total_price, now());");
+                .add("VALUES (:id, :userId, :status, :orderNo, :totalPrice, now());");
         HashMap<String, Object> params = new HashMap<>();
         String id = UUID.randomUUID().toString();
         params.put("id", id);
         params.put("userId", shoppingCart.getUserId());
-        params.put("status", saleOrder.getStatus());
-        params.put("order_no", shoppingCart.getId());
-        params.put("total_price", shoppingCart.getTotalPrice());
+        params.put("status", "waiting");
+        params.put("orderNo", shoppingCart.getId());
+        params.put("totalPrice", shoppingCart.getTotalPrice());
         try {
             namedParameterJdbcTemplate.update(sql.toString(), params);
             return params;
