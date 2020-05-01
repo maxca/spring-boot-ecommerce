@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
@@ -24,8 +21,9 @@ public class SaleOrderController {
     private SaleOrderService saleOrderService;
 
     @PostMapping
-    public ResponseEntity<?> checkout(@RequestBody @Valid SaleOrder saleOrder){
-        Object saleOrder1 = saleOrderService.checkout(saleOrder);
+    public ResponseEntity<?> checkout(@RequestHeader("sessionId") String sessionId){
+        System.out.println("sessionId : " + sessionId);
+        Object saleOrder1 = saleOrderService.checkout(sessionId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel(saleOrder1));

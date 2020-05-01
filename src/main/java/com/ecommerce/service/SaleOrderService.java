@@ -7,6 +7,7 @@ import com.ecommerce.model.ShoppingCart;
 import com.ecommerce.model.UserSession;
 import com.ecommerce.repository.SaleOrderRepository;
 import com.ecommerce.repository.ShoppingCartRepository;
+import com.ecommerce.repository.UserSessionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,15 +21,21 @@ public class SaleOrderService {
     @Autowired
     private SaleOrderRepository saleOrderRepository;
 
-    public Object checkout(SaleOrder saleOrder) {
-        System.out.println(saleOrder.getUserId());
-        if (null == saleOrder.getUserId()) {
+    @Autowired
+    private UserSessionRepository userSessionRepository;
+
+    public Object checkout(String sessionId) {
+        if (null == sessionId) {
+            throw new RecordNotFoundException(404, "SessionId Not found");
+        }
+        UserSession userSession = userSessionRepository.findUserSessionBySessionId(sessionId);
+        if (null == userSession) {
             throw new RecordNotFoundException(404, "User Not found");
         }
-        ShoppingCart shoppingCart = shoppingCartRepository.getShoppingCart(saleOrder.getUserId());
+        ShoppingCart shoppingCart = shoppingCartRepository.getShoppingCart(userSession.getUserId());
         if (null == shoppingCart) {
-            throw new RecordNotFoundException(404, "User Not found");
+            throw new RecordNotFoundException(404, "Item In Cart Not found");
         }
-        return saleOrderRepository.createSaleOrder(shoppingCart, saleOrder);
+        return saleOrderRepository.createSaleOrder(shoppingCart);
     }
 }
