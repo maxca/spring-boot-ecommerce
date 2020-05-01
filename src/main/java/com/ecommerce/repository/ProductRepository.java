@@ -5,6 +5,7 @@ import com.ecommerce.repository.mapper.ProductMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.repository.query.QueryCreationException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -119,5 +120,20 @@ public class ProductRepository {
                 .add("price")
                 .add("stock")
                 .toString();
+    }
+
+    public String deleteProduct(String productId) {
+        StringJoiner sql = new StringJoiner(" ");
+        sql.add("DELETE FROM products ")
+                .add("where id = :productId");
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("productId", productId);
+        try {
+            namedParameterJdbcTemplate.update(sql.toString(), params);
+            return productId;
+        } catch (QueryCreationException ex) {
+            log.error("query error", ex.getMessage());
+            return null;
+        }
     }
 }

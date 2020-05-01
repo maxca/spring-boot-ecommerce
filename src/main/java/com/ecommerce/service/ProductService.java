@@ -1,6 +1,8 @@
 package com.ecommerce.service;
 
 import com.ecommerce.exception.BusinessException;
+import com.ecommerce.exception.RecordNotFoundException;
+import com.ecommerce.exception.UnauthorizedException;
 import com.ecommerce.model.Product;
 import com.ecommerce.model.UserSession;
 import com.ecommerce.repository.ProductRepository;
@@ -54,5 +56,17 @@ public class ProductService {
 
     private boolean validateProductOwner(String userId, String productId) {
         return productRepository.validateProductOwner(userId, productId);
+    }
+
+    public String deleteProduct(String productId) throws RecordNotFoundException {
+        Product product = productRepository.findProductById(productId);
+        if (null == product) {
+            throw new RecordNotFoundException(404, "ProductID Not Found");
+        }
+        String product2 = productRepository.deleteProduct(productId);
+        if (null != product2) {
+            return null;
+        }
+        throw new UnauthorizedException(500, "can't delete product");
     }
 }
