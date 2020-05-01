@@ -1,5 +1,6 @@
 package com.ecommerce.controller;
 
+import com.ecommerce.model.Product;
 import com.ecommerce.model.SaleOrder;
 import com.ecommerce.model.response.ResponseModel;
 import com.ecommerce.service.SaleOrderService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/sale-order")
@@ -27,5 +29,13 @@ public class SaleOrderController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ResponseModel(saleOrder1));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllSaleOrder() {
+        List<SaleOrder> saleOrders = saleOrderService.getAllSaleOrder();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(saleOrders);
     }
 }

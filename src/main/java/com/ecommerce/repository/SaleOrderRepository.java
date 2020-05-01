@@ -1,14 +1,19 @@
 package com.ecommerce.repository;
 
+import com.ecommerce.model.Product;
 import com.ecommerce.model.SaleOrder;
 import com.ecommerce.model.ShoppingCart;
+import com.ecommerce.repository.mapper.ProductMapper;
+import com.ecommerce.repository.mapper.SaleOrderMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.repository.query.QueryCreationException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -37,6 +42,29 @@ public class SaleOrderRepository {
             return params;
         } catch (QueryCreationException ex) {
             log.error("query error", ex.getMessage());
+            return null;
+        }
+    }
+
+    private String getSaleOrderAllFields() {
+        return new StringJoiner(",")
+                .add("id")
+                .add("status")
+                .add("total_price")
+                .add("user_id")
+                .add("order_no")
+                .add("created_datetime")
+                .toString();
+    }
+
+    public List<SaleOrder> getAllSaleOrder() {
+        StringJoiner sql = new StringJoiner(" ");
+        sql.add("SELECT " + getSaleOrderAllFields());
+        sql.add("FROM sales_order");
+        try {
+            return namedParameterJdbcTemplate.query(sql.toString(), new SaleOrderMapper());
+        } catch (EmptyResultDataAccessException exception) {
+            log.info("can't get products", sql.toString());
             return null;
         }
     }
