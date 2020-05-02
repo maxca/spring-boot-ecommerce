@@ -5,8 +5,8 @@ import com.ecommerce.model.request.UserLoginRequest;
 import com.ecommerce.repository.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.repository.query.QueryCreationException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +39,7 @@ public class UserRepository {
         try {
             namedParameterJdbcTemplate.update(sql.toString(), params);
             return userId;
-        } catch (QueryCreationException ex) {
+        } catch (DataIntegrityViolationException ex) {
             return null;
         }
 
@@ -86,7 +86,7 @@ public class UserRepository {
         HashMap<String, Object> params = new HashMap<>();
         params.put("userId", userId);
         try {
-            return namedParameterJdbcTemplate.update(sql.toString(), params);
+            return namedParameterJdbcTemplate.update(sql.toString(), params) == 1 ? 1 : null;
         } catch (Exception ex) {
             return null;
         }
