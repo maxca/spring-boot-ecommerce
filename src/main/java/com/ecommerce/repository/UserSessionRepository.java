@@ -1,14 +1,15 @@
 package com.ecommerce.repository;
 
 import com.ecommerce.model.UserSession;
-import com.ecommerce.repository.mapper.UserMapper;
 import com.ecommerce.repository.mapper.UserSessionMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.repository.query.QueryCreationException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.StringJoiner;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @Repository
 @Slf4j
+@Transactional
 public class UserSessionRepository {
 
     @Autowired
@@ -34,7 +36,7 @@ public class UserSessionRepository {
         try {
             return namedParameterJdbcTemplate.queryForObject(sql.toString(), params, new UserSessionMapper());
         } catch (EmptyResultDataAccessException ex) {
-            log.error("select user session query :", sql.toString());
+            log.error("select user session query :" + sql.toString());
             return null;
         }
     }
@@ -51,7 +53,7 @@ public class UserSessionRepository {
         try {
             namedParameterJdbcTemplate.update(sql.toString(), params);
             return sessionId;
-        } catch (QueryCreationException ex) {
+        } catch (DataIntegrityViolationException ex) {
             log.error("query error", ex.getMessage());
             return null;
         }
