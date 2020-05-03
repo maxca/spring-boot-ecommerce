@@ -1,9 +1,7 @@
 package com.ecommerce.service;
 
-import com.ecommerce.exception.BusinessException;
 import com.ecommerce.exception.RecordNotFoundException;
 import com.ecommerce.exception.UnauthorizedException;
-import com.ecommerce.model.User;
 import com.ecommerce.model.UserSession;
 import com.ecommerce.repository.UserSessionRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +18,7 @@ public class UserSessionService {
     public UserSession validateSession(String sessionId) {
         UserSession session = userSessionRepository.findUserSessionBySessionId(sessionId);
         if (null == session) {
-            throw new UnauthorizedException(404, "Unauthorized service");
+            throw new UnauthorizedException(401, "Unauthorized service");
         }
         return session;
     }
@@ -28,7 +26,7 @@ public class UserSessionService {
     public UserSession createUserSession(String userId) {
         String sessionId = userSessionRepository.createUserSession(userId);
         if (null == sessionId) {
-            throw new UnauthorizedException(404, "Unauthorized can't create session");
+            throw new UnauthorizedException(401, "Unauthorized can't create session");
         }
         return this.validateSession(sessionId);
     }
