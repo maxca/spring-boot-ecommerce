@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,6 +56,18 @@ public class BaseTest {
         ObjectMapper mapper = new ObjectMapper();
         mockMvc.perform(MockMvcRequestBuilders.delete(url)
                 .content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(jsonPath("statusCode").value(statusCode));
+    }
+
+    public void tesCurlPostControllerFromHeader(String url, Object request, String statusCode) throws Exception {
+        Map<String, Object> session = (Map<String, Object>) request;
+        String keyId = (String) session.get(session);
+        String sessionId = (String) session.get("sessionId");
+        ObjectMapper mapper = new ObjectMapper();
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                .header("sessionId", sessionId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("statusCode").value(statusCode));
