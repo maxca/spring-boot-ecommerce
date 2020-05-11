@@ -82,6 +82,37 @@ public class ShoppingCartRepository {
         }
     }
 
+    public void updateProductQty(CartItem item, String action) {
+        CartItem cartItem = getCartItem(item.getCartId(), item.getProductId());
+        if (cartItem == null) {
+            log.error("cart item not found");
+            return;
+        }
+        int qty = cartItem.getQuantity();
+        if (action == "increase") {
+            qty += 1;
+        } else {
+            qty -= 1;
+        }
+        if ( qty == 0 ) {
+            deleteProductInCart(cartItem.getId());
+            return;
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", cartItem.getId());
+        params.put("quantity", qty);
+        StringJoiner sql = new StringJoiner(" ");
+        sql.add("UPDATE cart_item")
+                .add("SET quantity = :quantity")
+                .add("WHERE id = :id");
+
+        try {
+            namedParameterJdbcTemplate.update(sql.toString(), params);
+        } catch (QueryCreationException ex) {
+            log.error("query error", ex.getMessage());
+        }
+    }
+
     private ShoppingCart createShippingCart(String userId) {
         ShoppingCart cart = new ShoppingCart();
         cart.setId(UUID.randomUUID().toString());

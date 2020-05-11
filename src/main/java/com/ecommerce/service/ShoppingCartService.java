@@ -37,6 +37,21 @@ public class ShoppingCartService {
         return shoppingCartRepository.addToCart(session.getUserId(), item);
     }
 
+    public String updateProductQty(String sessionId, CartItem item, String action) throws BusinessException {
+        UserSession session = userSessionService.validateSession(sessionId);
+        if (null == session) {
+            throw new BusinessException(404, "User Not found");
+        }
+        ShoppingCart userCart = getShoppingCart(session.getUserId());
+        if (null == userCart) {
+            throw new BusinessException(404, "Shopping cart not found");
+        }
+
+        item.setCartId(userCart.getId());
+        shoppingCartRepository.updateProductQty(item, action);
+        return "Success";
+    }
+
     public ShoppingCart getShoppingCart(String userId) {
         return shoppingCartRepository.getShoppingCart(userId);
     }
