@@ -34,6 +34,28 @@ public class ShoppingCartController {
                 .body(data);
     }
 
+    @PutMapping("increase")
+    public ResponseEntity<?> increaseProductQty(
+            @RequestHeader("sessionId") String sessionId,
+            @Valid @NonNull @RequestBody CartItem item) {
+        String response = shoppingCartService.updateProductQty(sessionId, item, "increase");
+        ResponseModel<ShoppingCart> data = new ResponseModel<>(response);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(data);
+    }
+
+    @PutMapping("decrease")
+    public ResponseEntity<?> decreaseProductQty(
+            @RequestHeader("sessionId") String sessionId,
+            @Valid @NonNull @RequestBody CartItem item) {
+        String response = shoppingCartService.updateProductQty(sessionId, item, "decrease");
+        ResponseModel<ShoppingCart> data = new ResponseModel<>(response);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(data);
+    }
+
     @GetMapping
     public ResponseEntity<?> getShoppingCart(@RequestHeader("sessionId") String sessionId) {
         UserSession session = userSessionService.validateSession(sessionId);
