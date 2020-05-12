@@ -32,14 +32,16 @@ public class ShoppingCartRepository {
         if (cartItem == null) {
             params.put("id", UUID.randomUUID().toString());
             params.put("quantity", item.getQuantity());
+            params.put("total_price", item.getQuantity() * item.getPrice());
             sql.add("INSERT INTO cart_item(")
-                    .add("id, cart_id, product_id, quantity, price)")
-                    .add("VALUES (:id, :cart_id, :product_id, :quantity, :price);");
+                    .add("id, cart_id, product_id, quantity, price, total_price)")
+                    .add("VALUES (:id, :cart_id, :product_id, :quantity, :price, :total_price);");
         } else {
             params.put("id", cartItem.getId());
             params.put("quantity", cartItem.getQuantity() + item.getQuantity());
+            params.put("total_price", (cartItem.getQuantity() + item.getQuantity()) * cartItem.getPrice());
             sql.add("UPDATE cart_item")
-                    .add("SET quantity = :quantity, price = :price")
+                    .add("SET quantity = :quantity, price = :price, total_price = :total_price")
                     .add("WHERE id = :id");
         }
         try {
@@ -66,7 +68,7 @@ public class ShoppingCartRepository {
             cart.setItems(cartItems);
             return cart;
         } catch (EmptyResultDataAccessException exception) {
-            log.info("query not found", sql.toString());
+            log.info("getShoppingCart query not found", sql.toString());
             return createShippingCart(userId);
         }
     }
@@ -101,9 +103,10 @@ public class ShoppingCartRepository {
         Map<String, Object> params = new HashMap<>();
         params.put("id", cartItem.getId());
         params.put("quantity", qty);
+        params.put("total_price", qty * cartItem.getPrice());
         StringJoiner sql = new StringJoiner(" ");
         sql.add("UPDATE cart_item")
-                .add("SET quantity = :quantity")
+                .add("SET quantity = :quantity, total_price = :total_price")
                 .add("WHERE id = :id");
 
         try {
@@ -148,7 +151,7 @@ public class ShoppingCartRepository {
         try {
             return namedParameterJdbcTemplate.queryForObject(sql.toString(), params, new CartItemMapper());
         } catch (EmptyResultDataAccessException exception) {
-            log.info("query not found", sql.toString());
+            log.info("getCartItem query not found", sql.toString());
             return null;
         }
     }
@@ -164,7 +167,7 @@ public class ShoppingCartRepository {
         try {
             return namedParameterJdbcTemplate.query(sql.toString(), params, new CartItemMapper());
         } catch (EmptyResultDataAccessException exception) {
-            log.info("query not found", sql.toString());
+            log.info("getCartItems query not found", sql.toString());
             return null;
         }
     }
